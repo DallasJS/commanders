@@ -1,19 +1,18 @@
 (function() {
 	Commander = can.Model({
-		findAll : 'GET /api/commanders',
-		findOne : 'GET /api/commanders/{id}',
-		create  : 'POST /api/commanders',
-		update  : 'PUT /api/commanders/{id}',
-		destroy : 'DELETE /api/commanders/{id}',
-		attributes : {
-			upvotes : 'number',
-			downvotes : 'number',
-			like : 'boolean'
+		findAll: 'GET /api/commanders',
+		findOne: 'GET /api/commanders/{id}',
+		create: 'POST /api/commanders',
+		update: 'PUT /api/commanders/{id}',
+		destroy: 'DELETE /api/commanders/{id}',
+		attributes: {
+			upvotes: 'number',
+			downvotes: 'number'
 		}
 	}, {
-		votes : can.compute(function() {
+		votes: function() {
 			return this.attr('upvotes') - this.attr('downvotes');
-		})
+		}
 	});
 
 	var Main = can.Control({
@@ -24,8 +23,8 @@
 				deferred = Commander.findAll({});
 
 			can.view('main.ejs', {
-				commanders : deferred,
-				favorites : this.favorites
+				commanders: deferred,
+				favorites: this.favorites
 			}).then(function(frag) {
 				self.element.html(frag);
 			});
@@ -39,13 +38,13 @@
 			var columnsReverse = $(this.element.find('tr').get().reverse());
 			columnsReverse.each(function() {
 				var self = $(this),
-					model = self.model(),
+					model = self.data('commander'),
 					prev = self.prev(),
-					prevModel = prev.model();
+					prevModel = prev.data('commander');
 				while(model && prevModel && model.votes() >= prevModel.votes()) {
 					prev.before(self);
 					prev = self.prev();
-					prevModel = prev.model();
+					prevModel = prev.data('commander');
 				}
 			});
 		},
@@ -55,29 +54,27 @@
 		},
 
 		'.up click': function(el, ev) {
-			var commander = el.closest('tr').model();
-			commander.attr('like', true).save();
-			el.addClass('active').parent().find('.down').remove();
+			var commander = el.closest('tr').data('commander');
+			commander.attr('upvotes', commander.upvotes + 1).save();
 		},
 
 		'.down click': function(el, ev) {
-			var commander = el.closest('tr').model();
-			commander.attr('like', false).save();
-			el.addClass('active').parent().find('.up').remove();
+			var commander = el.closest('tr').data('commander');
+			commander.attr('downvotes', commander.downvotes + 1).save();
 		},
 
 		'.favorite click' : function(el, ev) {
-			this.favorites.push(el.closest('tr').model());
+			this.favorites.push(el.closest('tr').data('commander'));
 			el.remove();
 		},
 
 		'.delete click' : function(el, ev) {
-			el.closest('tr').model().destroy();
+			el.closest('tr').data('commander').destroy();
 			el.remove();
 		},
 		
 		'.photo mouseenter': function(el, ev){
-			var commander = el.closest('tr').model();
+			var commander = el.closest('tr').data('commander');
 
 			new Tooltip($('<div class="tooltip alert"><div class="tooltip-arrow"></div>' +
 				'<div class="tooltip-inner">' + commander.attr('name') + '</div></div>'), {

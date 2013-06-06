@@ -1,0 +1,31 @@
+[{
+	"name": "Admiral Adama",
+	"upvotes": 0,
+	"downvotes": 0,
+	"ship": "Battlestar Galactica",
+	"photo": "/images/adama.jpeg"
+}, {
+	"name": "Admiral Ackbar",
+	"upvotes": 0,
+	"downvotes": 0,
+	"ship": "Home One",
+	"photo": "/images/ackbar.jpeg"
+}, {
+	"name": "Captain Brannigan",
+	"upvotes": 0,
+	"downvotes": 0,
+	"ship": "Nimbus",
+	"photo": "/images/brannigan.jpeg"
+}, {
+	"name": "Captain Picard",
+	"upvotes": 0,
+	"downvotes": 0,
+	"ship": "USS Enterprise",
+	"photo": "/images/picard.jpeg"
+}, {
+	"name": "Captain Kirk",
+	"upvotes": 0,
+	"downvotes": 0,
+	"ship": "USS Enterprise",
+	"photo": "/images/kirk.jpeg"
+}]

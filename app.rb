@@ -9,9 +9,10 @@ end
 before "/api/*" do
 	content_type :json
 
-	connection = Mongo::Connection.new("flame.mongohq.com", 27107)
-	db = connection.db(ENV["db"])
-	db.authenticate("heroku", ENV["heroku"])
+	db_url = URI.parse(ENV["MONGOHQ_URL"])
+	db_name = db_url.path.gsub(/^\//, "")
+	db = Mongo::Connection.new(db_url.host, db_url.port).db(db_name)
+	db.authenticate(db_url.user, db_url.password)
 
 	@commanders = db.collection("commanders")
 end
@@ -56,11 +57,10 @@ put "/api/commanders/:id" do
 
 	commander = @commanders.find_one(:_id => id)
 
-	if p["like"]
-		commander["upvotes"] = commander["upvotes"].to_i + 1
-	else
-		commander["downvotes"] = commander["downvotes"].to_i + 1
-	end
+	puts p["upvotes"]
+
+	commander["upvotes"] = p["upvotes"]
+	commander["downvotes"] = p["downvotes"]
 
 	@commanders.update({ :_id => id }, commander);
 
@@ -69,5 +69,5 @@ put "/api/commanders/:id" do
 end
 
 delete "/api/commanders/:id" do
-	#@commanders.remove(:_id => BSON::ObjectId(params[:id]))
+	@commanders.remove(:_id => BSON::ObjectId(params[:id]))
 end
