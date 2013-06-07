@@ -1,5 +1,5 @@
 (function() {
-	Commander = can.Model({
+	var Commander = can.Model({
 		findAll: 'GET /api/commanders',
 		findOne: 'GET /api/commanders/{id}',
 		create: 'POST /api/commanders',
@@ -72,7 +72,7 @@
 			el.closest('tr').data('commander').destroy();
 			el.remove();
 		},
-		
+
 		'.photo mouseenter': function(el, ev){
 			var commander = el.closest('tr').data('commander');
 
