@@ -1,0 +1,7 @@
+{
+	"name": "commanders",
+	"version": "1.0.0",
+	"dependencies": {
+	"bower": "1.0.3"
+	}
+}
