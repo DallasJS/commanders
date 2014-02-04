@@ -1,7 +1,10 @@
 {
 	"name": "commanders",
-	"version": "1.0.0",
-	"dependencies": {
-	"bower": "1.0.3"
+	"scripts": {
+		"postinstall": "node_modules/bower/bin/bower install",
+		"start": "node app.js"
+	},
+	"devDependencies": {
+		"bower": "1.2.8"
 	}
 }

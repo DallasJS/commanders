@@ -1,23 +1,23 @@
 define(['can/control',
 	'can/view/ejs',
+	'can/view/modifiers',
 	'tooltip',
 	'commander'],
-function(Control, view, Tooltip, Commander) {
-	var Main = can.Control({
+function(Control, view, modifiers, Tooltip, Commander) {
+	var Main = can.Control.extend({
 		init: function(el, ops) {
 			this.favorites = new Commander.List();
 
 			var self = this,
 				deferred = Commander.findAll({});
 
-			can.view('main.ejs', {
+			this.element.html(can.view('main.ejs', {
 				commanders: deferred,
 				favorites: this.favorites
-			}).then(function(frag) {
-				self.element.html(frag);
-			});
+			}));
 
 			deferred.done(function(list) {
+				self.reorder();
 				self.on(list, 'change', 'reorder');
 			});
 		},
@@ -29,7 +29,7 @@ function(Control, view, Tooltip, Commander) {
 					model = self.data('commander'),
 					prev = self.prev(),
 					prevModel = prev.data('commander');
-				while(model && prevModel && model.votes() >= prevModel.votes()) {
+				while(model && prevModel && model.attr('votes') >= prevModel.attr('votes')) {
 					prev.before(self);
 					prev = self.prev();
 					prevModel = prev.data('commander');
@@ -58,7 +58,6 @@ function(Control, view, Tooltip, Commander) {
 
 		'.delete click' : function(el, ev) {
 			el.closest('tr').data('commander').destroy();
-			el.remove();
 		},
 
 		'.photo mouseenter': function(el, ev){
@@ -66,7 +65,7 @@ function(Control, view, Tooltip, Commander) {
 
 			new Tooltip($('<div class="tooltip alert"><div class="tooltip-arrow"></div>' +
 				'<div class="tooltip-inner">' + commander.attr('name') + '</div></div>'), {
-				anchor : el
+				anchor: el
 			});
 		}
 	});

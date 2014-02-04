@@ -25,7 +25,7 @@ end
 get "/api/commanders" do
 	commanders = @commanders.find().to_a
 	commanders.each do |c|
-		c["votes"] = c["upvotes"].to_i - c["downvotes"].to_i
+		# c["votes"] = c["upvotes"].to_i - c["downvotes"].to_i
 		replaceProp(c, "_id", "id")
 	end
 

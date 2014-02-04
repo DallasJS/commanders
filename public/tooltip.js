@@ -1,5 +1,5 @@
 define(['can/control'], function(Control) {
-	var Tooltip = can.Control({
+	var Tooltip = can.Control.extend({
 		init: function( el, options ) {
 			var offset = $(options.anchor).offset();
 			el.appendTo(document.body)
