@@ -53,14 +53,12 @@ end
 
 put "/api/commanders/:id" do
 	id = BSON::ObjectId(params[:id])
-	p = params
+	body = JSON.parse request.body.read
 
 	commander = @commanders.find_one(:_id => id)
 
-	puts p["upvotes"]
-
-	commander["upvotes"] = p["upvotes"]
-	commander["downvotes"] = p["downvotes"]
+	commander["upvotes"] = body["upvotes"]
+	commander["downvotes"] = body["downvotes"]
 
 	@commanders.update({ :_id => id }, commander);
 

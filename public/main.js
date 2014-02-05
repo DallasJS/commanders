@@ -23,17 +23,26 @@ function(Control, view, modifiers, Tooltip, Commander) {
 		},
 
 		reorder : function() {
-			var columnsReverse = $(this.element.find('tr').get().reverse());
-			columnsReverse.each(function() {
-				var self = $(this),
-					model = self.data('commander'),
-					prev = self.prev(),
-					prevModel = prev.data('commander');
-				while(model && prevModel && model.attr('votes') >= prevModel.attr('votes')) {
-					prev.before(self);
-					prev = self.prev();
-					prevModel = prev.data('commander');
+			var rows = $(this.element.find('tr:gt(0)'));
+
+			Array.prototype.sort.call(rows, function(a, b) {
+				var rowA = $(a),
+						rowB = $(b),
+						modelA = rowA.data('commander'),
+						modelB = rowB.data('commander');
+
+				if(modelA.attr('votes') < modelB.attr('votes')) {
+					rowA.before(rowB);
+
+					return 1;
 				}
+				else if(modelB.attr('votes') < modelA.attr('votes')) {
+					rowB.before(rowA);
+
+					return -1;
+				}
+
+				return 0;
 			});
 		},
 

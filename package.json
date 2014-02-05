@@ -4,6 +4,10 @@
 		"postinstall": "node_modules/bower/bin/bower install",
 		"start": "node app.js"
 	},
+	"dependencies": {
+		"feathers": "0.3.0",
+		"request": "2.33.0"
+	},
 	"devDependencies": {
 		"bower": "1.2.8"
 	}
