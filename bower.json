@@ -1,7 +1,7 @@
 {
 	"name": "commanders",
 	"dependencies": {
-		"canjs": "2.0.4",
+		"canjs": "2.0.5",
 		"jquery": "2.0.3",
 		"requirejs": "2.1.8",
 		"socket.io-client": "0.9.16"
