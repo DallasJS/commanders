@@ -14,18 +14,6 @@ var commanderSvc = {
 		});
 	},
 
-	get: function(id, params, callback) {
-		request.get({
-			uri: legacyDomain + '/' + id,
-			qs: params,
-			json: true
-		}, function(e, r, commander) {
-			callback(null, commander);
-		});
-	},
-
-	create: function(data, params, callback) {},
-
 	update: function(id, data, params, callback) {
 		request.put({
 			uri: legacyDomain + '/' + id,
@@ -35,9 +23,7 @@ var commanderSvc = {
 		}, function(e, r, commander) {
 			callback(null, commander);
 		});
-	},
-
-	remove: function(id, params, callback) {}
+	}
 };
 
 feathers()

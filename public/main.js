@@ -6,19 +6,15 @@ define(['can/control',
 function(Control, view, modifiers, Tooltip, Commander) {
 	var Main = can.Control.extend({
 		init: function(el, ops) {
-			this.favorites = new Commander.List();
-
 			var self = this,
 				deferred = Commander.findAll({});
 
 			this.element.html(can.view('main.ejs', {
-				commanders: deferred,
-				favorites: this.favorites
+				commanders: deferred
 			}));
 
 			deferred.done(function(list) {
 				self.reorder();
-				self.on(list, 'change', 'reorder');
 			});
 		},
 
@@ -46,7 +42,7 @@ function(Control, view, modifiers, Tooltip, Commander) {
 			});
 		},
 
-		'{Commander} updated' : function() {
+		'.sort click' : function() {
 			this.reorder();
 		},
 
@@ -58,15 +54,6 @@ function(Control, view, modifiers, Tooltip, Commander) {
 		'.down click': function(el, ev) {
 			var commander = el.closest('tr').data('commander');
 			commander.attr('downvotes', commander.downvotes + 1).save();
-		},
-
-		'.favorite click' : function(el, ev) {
-			this.favorites.push(el.closest('tr').data('commander'));
-			el.remove();
-		},
-
-		'.delete click' : function(el, ev) {
-			el.closest('tr').data('commander').destroy();
 		},
 
 		'.photo mouseenter': function(el, ev){
