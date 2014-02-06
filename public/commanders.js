@@ -1,18 +1,19 @@
 (function() {
 	var Commander = can.Model({
 		findAll: 'GET /api/commanders',
-		findOne: 'GET /api/commanders/{id}',
-		create: 'POST /api/commanders',
 		update: 'PUT /api/commanders/{id}',
-		destroy: 'DELETE /api/commanders/{id}',
+		//for demo purposes, we're not actually destroying anything on the server
+		destroy: function() {
+			return new $.Deferred().resolve();
+		},
 		attributes: {
 			upvotes: 'number',
 			downvotes: 'number'
 		}
 	}, {
-		votes: function() {
+		votes: can.compute(function() {
 			return this.attr('upvotes') - this.attr('downvotes');
-		}
+		})
 	});
 
 	var Main = can.Control({
@@ -30,26 +31,36 @@
 			});
 
 			deferred.done(function(list) {
+				self.reorder();
 				self.on(list, 'change', 'reorder');
 			});
 		},
 
-		reorder : function() {
-			var columnsReverse = $(this.element.find('tr').get().reverse());
-			columnsReverse.each(function() {
-				var self = $(this),
-					model = self.data('commander'),
-					prev = self.prev(),
-					prevModel = prev.data('commander');
-				while(model && prevModel && model.votes() >= prevModel.votes()) {
-					prev.before(self);
-					prev = self.prev();
-					prevModel = prev.data('commander');
+		reorder: function() {
+			var rows = $(this.element.find('tr:gt(0)'));
+
+			Array.prototype.sort.call(rows, function(a, b) {
+				var rowA = $(a),
+						rowB = $(b),
+						modelA = rowA.data('commander'),
+						modelB = rowB.data('commander');
+
+				if(modelA.attr('votes') < modelB.attr('votes')) {
+					rowA.before(rowB);
+
+					return 1;
 				}
+				else if(modelB.attr('votes') < modelA.attr('votes')) {
+					rowB.before(rowA);
+
+					return -1;
+				}
+
+				return 0;
 			});
 		},
 
-		'{Commander} updated' : function() {
+		'{Commander} updated': function() {
 			this.reorder();
 		},
 
@@ -63,14 +74,13 @@
 			commander.attr('downvotes', commander.downvotes + 1).save();
 		},
 
-		'.favorite click' : function(el, ev) {
+		'.favorite click': function(el, ev) {
 			this.favorites.push(el.closest('tr').data('commander'));
 			el.remove();
 		},
 
-		'.delete click' : function(el, ev) {
+		'.delete click': function(el, ev) {
 			el.closest('tr').data('commander').destroy();
-			el.remove();
 		},
 
 		'.photo mouseenter': function(el, ev){
