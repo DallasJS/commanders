@@ -25,49 +25,23 @@ end
 get "/api/commanders" do
 	commanders = @commanders.find().to_a
 	commanders.each do |c|
-		c["votes"] = c["upvotes"].to_i - c["downvotes"].to_i
 		replaceProp(c, "_id", "id")
 	end
 
-	commanders.sort! { |a,b| b["votes"] <=> a["votes"] }
 	commanders.to_json
-end
-
-get "/api/commanders/:id" do
-	commander = @commanders.find_one(:_id => BSON::ObjectId(params[:id]))
-
-	if commander.count > 0
-		replaceProp(commander, "_id", "id")
-	end
-
-	commander.to_json
-end
-
-post "/api/commanders" do
-	body = JSON.parse(request.body.read)
-	id = @commanders.insert(body).to_s
-
-	replaceProp(body, "_id", "id")
-	body.to_json
 end
 
 put "/api/commanders/:id" do
 	id = BSON::ObjectId(params[:id])
-	p = params
+	body = params
 
 	commander = @commanders.find_one(:_id => id)
 
-	puts p["upvotes"]
-
-	commander["upvotes"] = p["upvotes"]
-	commander["downvotes"] = p["downvotes"]
+	commander["upvotes"] = body["upvotes"]
+	commander["downvotes"] = body["downvotes"]
 
 	@commanders.update({ :_id => id }, commander);
 
 	replaceProp(commander, "_id", "id")
 	commander.to_json
-end
-
-delete "/api/commanders/:id" do
-	@commanders.remove(:_id => BSON::ObjectId(params[:id]))
 end

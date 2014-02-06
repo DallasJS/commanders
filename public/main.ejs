@@ -4,7 +4,7 @@
   <% can.each(favorites, function(fav) { %>
     <li>
       <span class="badge badge-info">
-        <%= fav.attr('name') %> (<strong><%= fav.votes() %></strong>)
+        <%= fav.attr('name') %> (<strong><%= fav.attr('votes') %></strong>)
       </span>
     </li>
   <% }) %>
@@ -28,7 +28,7 @@
       <a href="javascript://" class="down"></a>
     </td>
     <td class="vote">
-      <span class="<%= commander.attr('upvotes') - commander.attr('downvotes') > 0 ? 'green' : 'red' %> toggle"><%= commander.attr('upvotes') - commander.attr('downvotes') %></span>
+      <span class="<%= commander.attr('votes') > 0 ? 'green' : 'red' %> toggle"><%= commander.attr('votes') %></span>
       <div class="toggle" style="display: none;">
         <span class="green"><%= commander.attr('upvotes') %></span><br />
         <span class="red"><%= commander.attr('downvotes') %></span>

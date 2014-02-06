@@ -1,8 +1,7 @@
 {
 	"name": "commanders",
-	"version": "1.0.0",
 	"dependencies": {
-		"canjs": "1.1.7",
+		"canjs": "2.0.5",
 		"jquery": "2.0.3",
 		"requirejs": "2.1.8"
 	}
