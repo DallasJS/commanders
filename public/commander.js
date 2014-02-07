@@ -7,8 +7,15 @@ define(['can/model',
 	var Commander = can.Model.extend({
 		findAll: 'GET /api/commanders',
 		update: function(id, data) {
-			socket.emit('api/commanders::update', id, data, {}, function() {});
-			return new $.Deferred();
+			var def = new $.Deferred();
+
+			socket.emit('api/commanders::update', id, data, {}, function(e, commander) {
+				//We're just assuming it's successful here, but be sure to handle
+				//errors(argument e) accordingly with def.fail, etc
+				def.resolve(commander);
+			});
+
+			return def;
 		},
 		attributes: {
 			upvotes: 'number',
@@ -21,7 +28,7 @@ define(['can/model',
 	});
 
 	socket.on('api/commanders updated', function(commander) {
-		Commander.model(commander).updated();
+		Commander.model(commander);
 	});
 
 	return Commander;
