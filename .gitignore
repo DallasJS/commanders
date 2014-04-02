@@ -3,3 +3,4 @@
 tmp
 /public/lib
 /node_modules
+.bundle

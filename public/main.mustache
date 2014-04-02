@@ -1,4 +1,4 @@
-<tooltip></tooltip>
+<commander-tooltip commander="tooltipCommander"></commander-tooltip>
 <h2>Your Favorites</h2>
 <div class="well favorites">
 	<ul class="nav nav-pills">
@@ -21,12 +21,12 @@
 		<th>Ship</th>
 		<th></th>
 	</thead>
-	<tbody deferredData="commandersDeferred">
+	<tbody>
 		{{#commanders}}
-		<tr {{data 'commander'}}>
+		<tr>
 			<td class="buttons">
-				<a href="javascript://" class="up"></a>
-				<a href="javascript://" class="down"></a>
+				<a href="javascript://" can-click="upvote" class="up"></a>
+				<a href="javascript://" can-click="downvote" class="down"></a>
 			</td>
 			<td class="vote">
 				<span class="{{#if votes}}green{{else}}red{{/if}} toggle">{{votes}}</span>
@@ -36,13 +36,13 @@
 				</div>
 			</td>
 			<td class="photo">
-				<img src="{{photo}}"/>
+				<img src="{{photo}}" can-mouseenter="mouseenter"/>
 			</td>
 			<td class="large">{{name}}</td>
 			<td class="large">{{ship}}</td>
 			<td class="actions">
-				<a href="javascript://" class="favorite"></a>
-				<a href="javascript://" class="delete"></a>
+				<a href="javascript://" can-click="favorite" class="favorite"></a>
+				<a href="javascript://" can-click="delete" class="delete"></a>
 			</td>
 		</tr>
 		{{/commanders}}
