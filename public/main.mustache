@@ -1,0 +1,50 @@
+<tooltip></tooltip>
+<h2>Your Favorites</h2>
+<div class="well favorites">
+	<ul class="nav nav-pills">
+		{{#favorites}}
+		<li>
+			<span class="badge badge-info">
+				{{name}} (<strong>{{votes}}</strong>)
+			</span>
+		</li>
+		{{/favorites}}
+	</ul>
+</div>
+
+<table class="table table-bordered">
+	<thead>
+		<th></th>
+		<th>Points</th>
+		<th>Looks</th>
+		<th>Name</th>
+		<th>Ship</th>
+		<th></th>
+	</thead>
+	<tbody deferredData="commandersDeferred">
+		{{#commanders}}
+		<tr {{data 'commander'}}>
+			<td class="buttons">
+				<a href="javascript://" class="up"></a>
+				<a href="javascript://" class="down"></a>
+			</td>
+			<td class="vote">
+				<span class="{{#if votes}}green{{else}}red{{/if}} toggle">{{votes}}</span>
+				<div class="toggle" style="display: none;">
+					<span class="green">{{upvotes}}</span><br />
+					<span class="red">{{downvotes}}</span>
+				</div>
+			</td>
+			<td class="photo">
+				<img src="{{photo}}"/>
+			</td>
+			<td class="large">{{name}}</td>
+			<td class="large">{{ship}}</td>
+			<td class="actions">
+				<a href="javascript://" class="favorite"></a>
+				<a href="javascript://" class="delete"></a>
+			</td>
+		</tr>
+		{{/commanders}}
+	</tbody>
+</table>

@@ -16,25 +16,21 @@
 		})
 	});
 
-	var Main = can.Control({
-		init: function(el, ops) {
-			this.favorites = new Commander.List();
+	// 	'{Commander} updated': function() {
+	// 		this.reorder();
+	// 	},
 
-			var self = this,
-				deferred = Commander.findAll({});
+	var commandersVM = can.Map.extend({
+		init: function() {
+			var self = this;
 
-			can.view('main.ejs', {
-				commanders: deferred,
-				favorites: this.favorites
-			}).then(function(frag) {
-				self.element.html(frag);
-			});
-
-			deferred.done(function(list) {
-				self.reorder();
-				self.on(list, 'change', 'reorder');
+			Commander.findAll({}, function(commanders) {
+				self.attr('commanders', commanders);
 			});
 		},
+
+		favorites: new Commander.List(),
+		tooltip: null,
 
 		reorder: function() {
 			var rows = $(this.element.find('tr:gt(0)'));
@@ -58,54 +54,90 @@
 
 				return 0;
 			});
-		},
-
-		'{Commander} updated': function() {
-			this.reorder();
-		},
-
-		'.up click': function(el, ev) {
-			var commander = el.closest('tr').data('commander');
-			commander.attr('upvotes', commander.upvotes + 1).save();
-		},
-
-		'.down click': function(el, ev) {
-			var commander = el.closest('tr').data('commander');
-			commander.attr('downvotes', commander.downvotes + 1).save();
-		},
-
-		'.favorite click': function(el, ev) {
-			this.favorites.push(el.closest('tr').data('commander'));
-			el.remove();
-		},
-
-		'.delete click': function(el, ev) {
-			el.closest('tr').data('commander').destroy();
-		},
-
-		'.photo mouseenter': function(el, ev){
-			var commander = el.closest('tr').data('commander');
-
-			new Tooltip($('<div class="tooltip alert"><div class="tooltip-arrow"></div>' +
-				'<div class="tooltip-inner">' + commander.attr('name') + '</div></div>'), {
-				anchor : el
-			});
 		}
 	});
 
-	var Tooltip = can.Control({
-		init: function( el, options ) {
-			var offset = $(options.anchor).offset();
-			el.appendTo(document.body)
-				.offset( {
-					left: offset.left,
-					top: offset.top - 32
-				}).animate({ opacity : 1 });
-		},
-		'{anchor} mouseleave': function( el, ev ) {
-			this.element.remove();
+	can.Component.extend({
+		tag: 'commanders',
+		template: can.view('main.mustache'),
+		scope: commandersVM,
+		events: {
+			'{Commander} updated': function() {
+				// this.scope.reorder();
+			},
+
+			'.up click': function(el, ev) {
+				var commander = el.closest('tr').data('commander');
+				commander.attr('upvotes', commander.upvotes + 1).save();
+			},
+
+			'.down click': function(el, ev) {
+				var commander = el.closest('tr').data('commander');
+				commander.attr('downvotes', commander.downvotes + 1).save();
+			},
+
+			'.favorite click': function(el, ev) {
+				this.scope.favorites.push(el.closest('tr').data('commander'));
+				el.remove();
+			},
+
+			'.delete click': function(el, ev) {
+				el.closest('tr').data('commander').destroy();
+			},
+
+			'.photo mouseenter': function(el, ev) {
+				// var offset = $(options.anchor).offset();
+				// 	el.appendTo(document.body)
+				// 		.offset( {
+				// 			left: offset.left,
+				// 			top: offset.top - 32
+				// 		}).animate({ opacity : 1 });
+				var commander = el.closest('tr').data('commander');
+				// this.scope.show(true);
+				console.log('setting')
+				this.scope.attr('tooltip', commander);
+			}
 		}
 	});
 
-	new Main('#main');
+	can.Component.extend({
+		tag: 'tooltip',
+		template: can.view('tooltip.mustache'),
+		scope: {
+			name: 'foo',
+		},
+		events: {
+			'{scope} tooltip': function(o, ev, val, old) {
+				console.log('show', arguments);
+
+				
+			}
+		}
+	})
+
+	$('#main').html(can.view('app.mustache', {}));
+
+	// 	'.photo mouseenter': function(el, ev){
+	// 		var commander = el.closest('tr').data('commander');
+
+	// 		new Tooltip($('<div class="tooltip alert"><div class="tooltip-arrow"></div>' +
+	// 			'<div class="tooltip-inner">' + commander.attr('name') + '</div></div>'), {
+	// 			anchor : el
+	// 		});
+	// 	}
+	// });
+
+	// var Tooltip = can.Control({
+	// 	init: function( el, options ) {
+	// 		var offset = $(options.anchor).offset();
+	// 		el.appendTo(document.body)
+	// 			.offset( {
+	// 				left: offset.left,
+	// 				top: offset.top - 32
+	// 			}).animate({ opacity : 1 });
+	// 	},
+	// 	'{anchor} mouseleave': function( el, ev ) {
+	// 		this.element.remove();
+	// 	}
+	// });
 })();
