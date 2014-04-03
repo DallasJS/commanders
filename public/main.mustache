@@ -1,4 +1,4 @@
-<commander-tooltip commander="tooltipCommander"></commander-tooltip>
+<commander-tooltip commander="tooltipCommander" anchor="anchor" showtooltip="showTooltip" class="tooltip alert"></commander-tooltip>
 <h2>Your Favorites</h2>
 <div class="well favorites">
 	<ul class="nav nav-pills">
@@ -36,7 +36,7 @@
 				</div>
 			</td>
 			<td class="photo">
-				<img src="{{photo}}" can-mouseenter="mouseenter"/>
+				<img src="{{photo}}" can-mouseenter="mouseenter" can-mouseleave="mouseleave"/>
 			</td>
 			<td class="large">{{name}}</td>
 			<td class="large">{{ship}}</td>

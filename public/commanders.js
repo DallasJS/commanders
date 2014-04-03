@@ -25,6 +25,9 @@
 			favorites: new Commander.List(),
 
 			tooltipCommander: null,
+			anchor: null,
+			showTooltip: false,
+
 			Commander: Commander,
 
 			upvote: function(commander) {
@@ -44,8 +47,14 @@
 				commander.destroy();
 			},
 
-			mouseenter: function(commander) {
+			mouseenter: function(commander, el) {
+				this.attr('anchor', el);
 				this.attr('tooltipCommander', commander);
+				this.attr('showTooltip', true);
+			},
+
+			mouseleave: function() {
+				this.attr('showTooltip', false);
 			},
 
 			reorder: function() {
@@ -59,7 +68,6 @@
 		},
 		events: {
 			'inserted': function() {
-				console.log('inserted')
 				var scope = this.scope;
 				Commander.findAll({}, function(commanders) {
 					scope.attr('commanders', commanders);
@@ -76,37 +84,23 @@
 	can.Component.extend({
 		tag: 'commander-tooltip',
 		template: can.view('tooltip.mustache'),
-		scope: {},
 		events: {
-			'{scope} commander': function(o, ev, val, old) {
-				console.log('show', arguments);
+			'{scope} showtooltip': function(o, ev, val, old) {
+				if(val) {
+					var offset = $(this.scope.anchor).offset();
+
+					this.element.offset({
+						left: offset.left + 100,
+						top: offset.top
+					})
+					.animate({ opacity: 1 }, 100);
+				}
+				else {
+					this.element.animate({ opacity: 0 }, 100);;
+				}
 			}
 		}
 	});
 
 	$('#main').html(can.view('app.mustache', {}));
-
-	// 	'.photo mouseenter': function(el, ev){
-	// 		var commander = el.closest('tr').data('commander');
-
-	// 		new Tooltip($('<div class="tooltip alert"><div class="tooltip-arrow"></div>' +
-	// 			'<div class="tooltip-inner">' + commander.attr('name') + '</div></div>'), {
-	// 			anchor : el
-	// 		});
-	// 	}
-	// });
-
-	// var Tooltip = can.Control({
-	// 	init: function( el, options ) {
-	// 		var offset = $(options.anchor).offset();
-	// 		el.appendTo(document.body)
-	// 			.offset( {
-	// 				left: offset.left,
-	// 				top: offset.top - 32
-	// 			}).animate({ opacity : 1 });
-	// 	},
-	// 	'{anchor} mouseleave': function( el, ev ) {
-	// 		this.element.remove();
-	// 	}
-	// });
 })();
